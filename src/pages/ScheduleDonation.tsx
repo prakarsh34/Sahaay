@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { db } from "../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
 
 const DonateBloodNow: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +15,7 @@ const DonateBloodNow: React.FC = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true, offset: 100 });
@@ -24,9 +27,27 @@ const DonateBloodNow: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+
+    try {
+      // Add form data to Firestore 'donors' collection
+      const docRef = await addDoc(collection(db, "donors"), {
+        ...formData,
+        timestamp: new Date(),
+      });
+
+      console.log("Donor added with ID:", docRef.id);
+      setSubmitted(true);
+    } catch (err: any) {
+      console.error("Firestore error:", err);
+      alert(
+        `Something went wrong. Check console for details.\nError: ${err.message}`
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -70,6 +91,7 @@ const DonateBloodNow: React.FC = () => {
         data-aos="fade-up"
       >
         <div className="grid sm:grid-cols-2 gap-6">
+          {/* Full Name */}
           <div>
             <label className="block mb-2 font-medium">Full Name</label>
             <input
@@ -82,6 +104,7 @@ const DonateBloodNow: React.FC = () => {
             />
           </div>
 
+          {/* Age */}
           <div>
             <label className="block mb-2 font-medium">Age</label>
             <input
@@ -96,6 +119,7 @@ const DonateBloodNow: React.FC = () => {
             />
           </div>
 
+          {/* Blood Type */}
           <div>
             <label className="block mb-2 font-medium">Blood Type</label>
             <select
@@ -107,13 +131,12 @@ const DonateBloodNow: React.FC = () => {
             >
               <option value="">Select</option>
               {["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].map((bt) => (
-                <option key={bt} value={bt}>
-                  {bt}
-                </option>
+                <option key={bt} value={bt}>{bt}</option>
               ))}
             </select>
           </div>
 
+          {/* Contact Number */}
           <div>
             <label className="block mb-2 font-medium">Contact Number</label>
             <input
@@ -128,6 +151,7 @@ const DonateBloodNow: React.FC = () => {
             />
           </div>
 
+          {/* City */}
           <div>
             <label className="block mb-2 font-medium">City</label>
             <input
@@ -140,6 +164,7 @@ const DonateBloodNow: React.FC = () => {
             />
           </div>
 
+          {/* Preferred Date */}
           <div>
             <label className="block mb-2 font-medium">Preferred Date</label>
             <input
@@ -155,9 +180,12 @@ const DonateBloodNow: React.FC = () => {
 
         <button
           type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-all duration-200"
+          disabled={loading}
+          className={`w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-all duration-200 ${
+            loading ? "opacity-70 cursor-not-allowed" : ""
+          }`}
         >
-          Confirm My Donation
+          {loading ? "Submitting..." : "Confirm My Donation"}
         </button>
       </form>
 
