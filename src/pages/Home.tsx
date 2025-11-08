@@ -15,7 +15,7 @@ import {
   FaInstagram,
 } from "react-icons/fa";
 
-// --- Navigation ---
+// --- Navigation, Features, Resources, Impact Stories, Testimonials, FAQ as before ---
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/why-donate", label: "Why Donate?" },
@@ -24,7 +24,6 @@ const navLinks = [
   { to: "/for-donors", label: "For Donors" },
 ];
 
-// --- Hospital Partner Logos ---
 const partnerHospitals = [
   "City General Hospital",
   "Unity Medical Center",
@@ -35,7 +34,6 @@ const partnerHospitals = [
   "Sunrise Hospital",
 ];
 
-// --- Features ---
 const features = [
   {
     icon: <FaUserCheck className="h-8 w-8 text-red-600" />,
@@ -54,7 +52,6 @@ const features = [
   },
 ];
 
-// --- Donor Resources ---
 const resources = [
   {
     icon: <FaBookMedical className="h-10 w-10 text-rose-600" />,
@@ -78,7 +75,6 @@ const resources = [
   },
 ];
 
-// --- Impact Stories ---
 const impactStories = [
   {
     title: "A Newborn's Second Chance Thanks to O- Donors",
@@ -94,7 +90,6 @@ const impactStories = [
   },
 ];
 
-// --- Testimonials ---
 const testimonials = [
   {
     quote: "The staff were amazing and made me feel so comfortable. Knowing I helped someone is the best feeling.",
@@ -113,7 +108,6 @@ const testimonials = [
   },
 ];
 
-// --- FAQ ---
 const faqData = [
   { question: "Is donating blood safe?", answer: "Absolutely. We use sterile, single-use equipment for every donation to ensure your safety." },
   { question: "How long does the whole process take?", answer: "From registration to refreshments, the entire process takes about an hour. The actual donation is only 10-15 minutes." },
@@ -122,14 +116,12 @@ const faqData = [
   { question: "What should I do before donating?", answer: "Eat a healthy meal, drink plenty of water, and get a good night's sleep. Bring a valid ID." },
 ];
 
-// --- FAQ Item Typing ---
 interface FAQItemProps {
   item: { question: string; answer: string };
   isOpen: boolean;
   onClick: () => void;
 }
 
-// --- FAQ Item Component ---
 const FAQItem: React.FC<FAQItemProps> = ({ item, isOpen, onClick }) => (
   <div className="border-b border-slate-200 py-4" data-aos="fade-up">
     <button
@@ -154,63 +146,46 @@ const Home: React.FC = () => {
 
   return (
     <div className="font-sans bg-white text-slate-800">
+
       {/* Header */}
-      <header
-        className="bg-white/90 shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md"
-        data-aos="fade-down"
-      >
+      <header className="bg-white/90 shadow-sm py-4 px-8 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md" data-aos="fade-down">
         <h1 className="text-3xl font-bold text-red-600">Sahaay</h1>
 
         <nav className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className="text-slate-600 hover:text-red-600"
-            >
-              {link.label}
-            </Link>
+            <Link key={link.to} to={link.to} className="text-slate-600 hover:text-red-600">{link.label}</Link>
           ))}
+
+          {/* Dashboard Button */}
+          <Link
+            to="/dashboard"
+            className="bg-red-600 text-white px-5 py-2 rounded-lg font-bold hover:bg-red-700"
+          >
+            Dashboard
+          </Link>
         </nav>
 
-        {/* Only Emergency Button */}
-        <Link
-          to="/emergency"
-          className="bg-rose-700 text-white px-5 py-2 rounded-lg font-bold hover:bg-rose-800 animate-pulse"
-        >
+        <Link to="/emergency" className="bg-rose-700 text-white px-5 py-2 rounded-lg font-bold hover:bg-rose-800 animate-pulse">
           EMERGENCY
         </Link>
       </header>
 
       {/* Hero */}
       <section className="bg-gradient-to-r from-red-50 to-rose-50 text-center py-28" data-aos="fade-up">
-        <h2 className="text-5xl font-extrabold mb-6">
-          Every Drop Counts. <span className="text-red-600">Be a Hero.</span>
-        </h2>
+        <h2 className="text-5xl font-extrabold mb-6">Every Drop Counts. <span className="text-red-600">Be a Hero.</span></h2>
         <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
           Join thousands of volunteers and help save lives in your community. Your donation can make a world of difference.
         </p>
-        <Link
-          to="/schedule-donation"
-          className="bg-red-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700"
-        >
-          Donate Blood Now ❤️
-        </Link>
+        <Link to="/schedule-donation" className="bg-red-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700">Donate Blood Now ❤️</Link>
       </section>
 
-      {/* Hospital Partners Marquee */}
+      {/* Partner Hospitals */}
       <section className="bg-slate-50 py-6" data-aos="fade-up">
         <p className="text-center text-slate-500 font-semibold mb-4">PROUDLY PARTNERED WITH</p>
         <div className="train-track">
-          <div className="train">
-            {/* Render the list of partners */}
-            {partnerHospitals.map((logo, i) => (
-              <span key={i}>{logo}</span>
-            ))}
-            {/* Render the list AGAIN for a seamless loop */}
-            {partnerHospitals.map((logo, i) => (
-              <span key={`dup-${i}`}>{logo}</span>
-            ))}
+          <div className="train flex gap-10 whitespace-nowrap animate-marquee">
+            {partnerHospitals.map((logo, i) => <span key={i}>{logo}</span>)}
+            {partnerHospitals.map((logo, i) => <span key={`dup-${i}`}>{logo}</span>)}
           </div>
         </div>
       </section>
@@ -220,12 +195,7 @@ const Home: React.FC = () => {
         <h3 className="text-4xl font-bold mb-12">The Donation Process</h3>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((f, i) => (
-            <div
-              key={i}
-              className="bg-white p-6 rounded-xl shadow hover:-translate-y-1 transition"
-              data-aos="zoom-in"
-              data-aos-delay={i * 200}
-            >
+            <div key={i} className="bg-white p-6 rounded-xl shadow hover:-translate-y-1 transition" data-aos="zoom-in" data-aos-delay={i * 200}>
               {f.icon}
               <h4 className="mt-4 font-semibold text-lg">{f.title}</h4>
               <p className="text-slate-600 mt-2">{f.description}</p>
@@ -240,12 +210,7 @@ const Home: React.FC = () => {
           <h3 className="text-4xl font-bold mb-12">Donor Resources & Info</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {resources.map((r, i) => (
-              <div
-                key={i}
-                className="bg-white p-6 rounded-xl shadow hover:shadow-lg"
-                data-aos="fade-up"
-                data-aos-delay={i * 200}
-              >
+              <div key={i} className="bg-white p-6 rounded-xl shadow hover:shadow-lg" data-aos="fade-up" data-aos-delay={i * 200}>
                 <div className="flex justify-center mb-4">{r.icon}</div>
                 <h4 className="font-semibold text-lg">{r.title}</h4>
                 <p className="text-slate-600 mt-2">{r.desc}</p>
@@ -255,8 +220,80 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Hero, Stats, Testimonials, FAQ, Footer remain unchanged */}
-      {/* ... */}
+      {/* Impact Stories */}
+      <section className="py-20 container mx-auto px-4" data-aos="fade-up">
+        <h3 className="text-4xl font-bold text-center mb-12">Impact Stories</h3>
+        <div className="grid md:grid-cols-3 gap-8">
+          {impactStories.map((story, i) => (
+            <div key={i} className="bg-white p-6 rounded-xl shadow hover:-translate-y-1 transition" data-aos="fade-up" data-aos-delay={i * 200}>
+              <h4 className="font-semibold text-lg mb-2">{story.title}</h4>
+              <p className="text-slate-600">{story.excerpt}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="bg-red-50 py-20" data-aos="fade-up">
+        <div className="container mx-auto text-center px-4">
+          <h3 className="text-4xl font-bold mb-12">What Donors Say</h3>
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((t, i) => (
+              <div key={i} className="bg-white p-6 rounded-xl shadow hover:shadow-lg" data-aos="fade-up" data-aos-delay={i * 200}>
+                <p className="italic text-slate-700">"{t.quote}"</p>
+                <p className="mt-4 font-semibold text-red-600">{t.author}</p>
+                <p className="text-slate-500 text-sm">{t.company}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 container mx-auto px-4" data-aos="fade-up">
+        <h3 className="text-4xl font-bold text-center mb-12">Frequently Asked Questions</h3>
+        <div className="max-w-4xl mx-auto space-y-4">
+          {faqData.map((item, i) => (
+            <FAQItem
+              key={i}
+              item={item}
+              isOpen={openFaqIndex === i}
+              onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-800 text-white py-12 mt-12" data-aos="fade-up">
+        <div className="container mx-auto px-4 grid md:grid-cols-3 gap-8">
+          <div>
+            <h4 className="font-bold text-lg mb-4">Sahaay</h4>
+            <p className="text-slate-300">Connecting donors and recipients to save lives, one donation at a time.</p>
+          </div>
+          <div>
+            <h4 className="font-bold text-lg mb-4">Quick Links</h4>
+            <ul>
+              {navLinks.map((link) => (
+                <li key={link.to} className="mb-2">
+                  <Link to={link.to} className="hover:text-red-600">{link.label}</Link>
+                </li>
+              ))}
+              <li className="mb-2">
+                <Link to="/dashboard" className="hover:text-red-600">Dashboard</Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-lg mb-4">Follow Us</h4>
+            <div className="flex space-x-4 text-2xl">
+              <FaTwitter className="hover:text-red-600 cursor-pointer" />
+              <FaLinkedin className="hover:text-red-600 cursor-pointer" />
+              <FaInstagram className="hover:text-red-600 cursor-pointer" />
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
