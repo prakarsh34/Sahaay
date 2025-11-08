@@ -32,7 +32,7 @@ const Emergency: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [timer, setTimer] = useState(0);
 
-  // ✅ Initialize reCAPTCHA placeholder (invisible, not rendered until sendOTP)
+  // 🧩 Ensure recaptcha container exists
   useEffect(() => {
     if (!document.getElementById("recaptcha-container")) {
       const div = document.createElement("div");
@@ -41,22 +41,36 @@ const Emergency: React.FC = () => {
     }
   }, []);
 
-  // ⏱ Countdown timer
+  // 🧹 Cleanup old verifier on unmount
+  useEffect(() => {
+    return () => {
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch {
+          /* ignore */
+        }
+        window.recaptchaVerifier = null;
+      }
+    };
+  }, []);
+
+  // ⏱ Resend timer
   useEffect(() => {
     if (timer > 0) {
-      const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
+      const interval = setInterval(() => setTimer((t) => t - 1), 1000);
       return () => clearInterval(interval);
     }
   }, [timer]);
 
-  // 📝 Handle input change
+  // 📋 Form changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🔐 Step 1: Send OTP (fresh reCAPTCHA each time)
+  // 🔐 Step 1 — Send OTP
   const sendOTP = async () => {
     if (!formData.contact.match(/^[6-9]\d{9}$/)) {
       alert("Please enter a valid 10-digit Indian phone number.");
@@ -69,14 +83,24 @@ const Emergency: React.FC = () => {
     try {
       console.log("📨 Sending OTP to:", phoneNumber);
 
-      // ✅ Always create a fresh verifier before sending OTP
+      // ✅ Clear old reCAPTCHA instance if exists
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (err) {
+          console.warn("⚠️ Could not clear old reCAPTCHA:", err);
+        }
+        window.recaptchaVerifier = null;
+      }
+
+      // ✅ Create a fresh invisible reCAPTCHA
       window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
         size: "invisible",
         callback: (response: any) => {
           console.log("✅ reCAPTCHA verified:", response);
         },
         "expired-callback": () => {
-          console.warn("⚠️ reCAPTCHA expired, reinitializing...");
+          console.warn("⚠️ reCAPTCHA expired, resetting...");
         },
       });
 
@@ -89,7 +113,6 @@ const Emergency: React.FC = () => {
       setOtpSent(true);
       setTimer(60);
       alert(`✅ OTP sent successfully to ${phoneNumber}`);
-      console.log("✅ OTP sent successfully:", result);
     } catch (error: any) {
       console.error("❌ OTP Error:", error);
       alert(`Failed to send OTP: ${error.message}`);
@@ -99,7 +122,7 @@ const Emergency: React.FC = () => {
     }
   };
 
-  // ✅ Step 2: Verify OTP
+  // ✅ Step 2 — Verify OTP
   const verifyOTP = async () => {
     if (!otp || !confirmationResult) {
       alert("Please enter the OTP sent to your phone.");
@@ -119,7 +142,7 @@ const Emergency: React.FC = () => {
     }
   };
 
-  // 🩸 Step 3: Submit to Firestore
+  // 🩸 Step 3 — Submit Emergency Request
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -172,7 +195,7 @@ const Emergency: React.FC = () => {
     );
   }
 
-  // 🧾 Main Form UI
+  // 🧾 Main form UI
   return (
     <div className="min-h-screen bg-red-50 flex flex-col items-center px-4 py-16">
       {/* Header */}
