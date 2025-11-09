@@ -158,16 +158,19 @@ const Home: React.FC = () => {
 
           {/* Dashboard Button */}
           <Link
-            to="/dashboard"
-            className="bg-red-600 text-white px-5 py-2 rounded-lg font-bold hover:bg-red-700"
-          >
-            Dashboard
-          </Link>
+  to="/dashboard"
+  className="bg-gradient-to-r from-rose-500 via-rose-400 to-pink-400 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-rose-300/50"
+>
+  Dashboard
+</Link>
         </nav>
 
-        <Link to="/emergency" className="bg-rose-700 text-white px-5 py-2 rounded-lg font-bold hover:bg-rose-800 animate-pulse">
-          EMERGENCY
-        </Link>
+        <Link
+  to="/emergency"
+  className="relative bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white font-semibold px-5 py-2 rounded-lg shadow-lg hover:scale-105 hover:shadow-red-500/40 transition-all duration-300 animate-pulse-slow"
+>
+  EMERGENCY
+</Link>
       </header>
 
       {/* Hero */}
@@ -176,7 +179,13 @@ const Home: React.FC = () => {
         <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
           Join thousands of volunteers and help save lives in your community. Your donation can make a world of difference.
         </p>
-        <Link to="/schedule-donation" className="bg-red-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700">Donate Blood Now ❤️</Link>
+      <Link
+  to="/schedule-donation"
+  className="relative bg-gradient-to-r from-rose-600 via-rose-500 to-rose-400 text-white font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-rose-400/50"
+>
+  Donate Blood Now ❤️
+  <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-rose-400 to-rose-500 opacity-0 hover:opacity-20 transition duration-300"></span>
+</Link>
       </section>
 
       {/* Partner Hospitals */}
